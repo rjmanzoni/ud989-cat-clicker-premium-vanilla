@@ -49,6 +49,7 @@ var octopus = {
         // tell our views to initialize
         catListView.init();
         catView.init();
+        adminView.init();
     },
 
     getCurrentCat: function() {
@@ -86,6 +87,7 @@ var catView = {
         // on click, increment the current cat's counter
         this.catImageElem.addEventListener('click', function(){
             octopus.incrementCounter();
+            adminView.fill();
         });
 
         // render this view (update the DOM elements with the right values)
@@ -135,6 +137,7 @@ var catListView = {
                 return function() {
                     octopus.setCurrentCat(catCopy);
                     catView.render();
+                    adminView.fill();
                 };
             })(cat));
 
@@ -143,6 +146,46 @@ var catListView = {
         }
     }
 };
+
+var adminView = {
+    init: function() {
+        // store the DOM element for easy access later
+        this.adminButton = document.getElementById('admin');
+        this.adminForm = document.getElementById('adminForm');
+
+        this.adminButton.addEventListener('click', function(){
+            if(!adminView.adminForm.hasChildNodes()){
+                 adminView.render();
+            }
+        });        
+
+        //this.render();
+    },
+
+    render : function(){
+        elemForm = document.createElement('form');
+        elemInputName = document.createElement('input');
+        elemImgSrc = document.createElement('input');
+        elemClickCount = document.createElement('input');
+        
+        elemForm.appendChild(elemInputName);
+        elemForm.appendChild(elemImgSrc);
+        elemForm.appendChild(elemClickCount);
+
+        adminForm.appendChild(elemForm);
+        this.adminForm.appendChild(elemForm);
+        
+        this.fill();
+    },
+
+    fill : function(){
+        cat = octopus.getCurrentCat();
+
+        elemInputName.setAttribute("value", cat.name);
+        elemImgSrc.setAttribute("value", cat.imgSrc);
+        elemClickCount.setAttribute("value", cat.clickCount);
+    }
+}
 
 // make it go!
 octopus.init();
